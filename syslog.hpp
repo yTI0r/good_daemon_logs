@@ -4,20 +4,7 @@
 #include <syslog.h>
 
 #include <streambuf>
-
-#ifndef LOGPRIORITY_C
-#define LOGPRIORITY_C
-enum LogPriority {
-  kLogEmerg = LOG_EMERG,      // system is unusable
-  kLogAlert = LOG_ALERT,      // action must be taken immediately
-  kLogCrit = LOG_CRIT,        // critical conditions
-  kLogErr = LOG_ERR,          // error conditions
-  kLogWarning = LOG_WARNING,  // warning conditions
-  kLogNotice = LOG_NOTICE,    // normal, but significant, condition
-  kLogInfo = LOG_INFO,        // informational message
-  kLogDebug = LOG_DEBUG       // debug-level message
-};
-#endif
+#include "logpriority.h"
 
 std::ostream& operator<<(std::ostream& os, const LogPriority& log_priority);
 
@@ -29,16 +16,16 @@ class Log : public std::basic_streambuf<char, std::char_traits<char> > {
     priority_ = LOG_DEBUG;
     strncpy(ident_, ident.c_str(), sizeof(ident_));
     ident_[sizeof(ident_) - 1] = '\0';
-    openlog(ident_, LOG_PID | LOG_CONS, facility_);
+    openlog(ident_, LOG_PID | (console?LOG_CONS:0), facility_);
     setlogmask(LOG_UPTO(level));
-    console_ = console;
   }
-
+  ~Log(){
+    closelog();
+  }
  protected:
   int sync() {
     if (buffer_.length()) {
       syslog(priority_, "%s", buffer_.c_str());
-      if (console_) std::cerr << buffer_ << std::endl;
       buffer_.erase();
       priority_ = LOG_DEBUG;  // default to debug for each message
     }
