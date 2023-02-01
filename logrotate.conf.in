@@ -1,0 +1,9 @@
+${LOGCONF_PREFIX}/${PROJECT_NAME}.log {
+    daily
+    rotate 10
+    compress
+    dateext
+    size 5M
+    missingok
+    notifempty
+}
