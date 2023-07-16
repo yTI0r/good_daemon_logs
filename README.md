@@ -23,3 +23,14 @@ Headers:
 CMAKE:
 
 * rsyslog and logrotate config templates
+* `checkatomic.cmake` - Resolve problem of usage libatomic on different platforms espeshaly on Raspberry. Linker error: `undefined reference to '__atomic_store_8'` - can be resolved by this script. 
+  * Usage. In CMakeLists.txt - add 
+
+  ```cmake
+  include(checkatomic.cmake)
+  if(ATOMIC_LINKER_LIBS)
+  target_link_libraries(YOUR_TARGET
+    ${ATOMIC_LINKER_LIBS}
+  )
+  endif()
+  ```
