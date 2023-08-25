@@ -1,4 +1,4 @@
-if ( $programname startswith "${PROJECT_NAME}" ) then {
-    action(type="omfile" file="${LOGCONF_PREFIX}/${PROJECT_NAME}.log" flushOnTXEnd="off")
+if ( $programname isequal "${PROJECT_NAME}" ) then {
+    action(type="omfile" file="${LOGCONF_PREFIX}/${PROJECT_NAME}.log" flushOnTXEnd="on")
     stop
 }
