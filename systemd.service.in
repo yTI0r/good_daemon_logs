@@ -1,0 +1,13 @@
+[Unit]
+# Human readable name of the unit
+Description=${PROJECT_NAME}
+
+
+[Service]
+# Command to execute when the service is started
+ExecStart=${SYSTEMDCONF_TARGET_INSTALL_PATH} ${SYSTEMDCONF_EXEC_POSTFIX}
+Type=simple
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
